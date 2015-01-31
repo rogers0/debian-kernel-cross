@@ -1,0 +1,7 @@
+# Settings
+
+CHROOT=/debian-kernel_rootfs
+NORMALUSER=tester
+DISTRO=jessie
+HOST_ARCH=armel
+MIRROR=http://cdn.debian.net/debian
