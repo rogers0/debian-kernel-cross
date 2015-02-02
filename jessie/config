@@ -1,7 +1,8 @@
 # Settings
 
 CHROOT=/debian-kernel_rootfs
-NORMALUSER=tester
+NORMALUSER=crossbuild
+NORMALUSER_UID=2000
 DISTRO=jessie
 HOST_ARCH=armel
 MIRROR=http://cdn.debian.net/debian
