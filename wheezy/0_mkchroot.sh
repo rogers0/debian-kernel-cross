@@ -30,23 +30,21 @@ if [ -z "$1" ]; then
 elif [ "$1" = "chrooted" ]; then
 # script to run in chroot environment
 
-	echo "deb http://www.emdebian.org/tools/debian $DISTRO main" >> /etc/apt/sources.list
-	wget -nv -O - http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add -
+	echo "deb $MIRROR squeeze main" >> /etc/apt/sources.list
+	echo "deb http://www.emdebian.org/debian $DISTRO main" >> /etc/apt/sources.list
+	echo "deb http://www.emdebian.org/debian squeeze main" >> /etc/apt/sources.list
+
 	mkdir -p ~/.aptitude
 	echo 'Apt::Install-Recommends "false";' > ~/.aptitude/config
-	[ -n "$HOST_ARCH" ] && dpkg --add-architecture $HOST_ARCH
 
 	aptitude update
-	aptitude install -y debhelper devscripts xmlto kernel-wedge python-six fakeroot gcc python3-debian git quilt bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl
+	aptitude install -y debhelper devscripts xmlto kernel-wedge python-six fakeroot gcc git quilt bc cpio debian-keyring fakeroot git-svn emdebian-archive-keyring
 	if [ "x$HOST_ARCH" = "xarmel" ]; then
-		CROSS_DEB="build-essential dpkg-cross crossbuild-essential-armel binutils-arm-linux-gnueabi"
-	elif [ "x$HOST_ARCH" = "xarmhf" ]; then
-		CROSS_DEB="build-essential dpkg-cross crossbuild-essential-armhf binutils-arm-linux-gnueabihf"
-	elif [ "x$HOST_ARCH" = "xarm64" ]; then
-		CROSS_DEB="build-essential dpkg-cross crossbuild-essential-arm64 binutils-aarch64-linux-gnu"
+		CROSS_DEB="build-essential dpkg-cross g++-4.4-arm-linux-gnueabi binutils-arm-linux-gnueabi"
 	fi
-	echo aptitude install -y $CROSS_DEB
-	aptitude install -y $CROSS_DEB
+	echo Please answer \"no\" until all packages is going to be installed . . .
+	echo aptitude install $CROSS_DEB
+	aptitude install $CROSS_DEB
 	aptitude clean
 
 	useradd -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER
