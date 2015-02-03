@@ -37,7 +37,7 @@ elif [ "$1" = "chrooted" ]; then
 	[ -n "$HOST_ARCH" ] && dpkg --add-architecture $HOST_ARCH
 
 	aptitude update
-	aptitude install -y debhelper devscripts xmlto kernel-wedge python-six fakeroot gcc python3-debian git quilt bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl
+	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt python3-debian
 	if [ "x$HOST_ARCH" = "xarmel" ]; then
 		CROSS_DEB="build-essential dpkg-cross crossbuild-essential-armel binutils-arm-linux-gnueabi"
 	elif [ "x$HOST_ARCH" = "xarmhf" ]; then

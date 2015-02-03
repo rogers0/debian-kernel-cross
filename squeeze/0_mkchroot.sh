@@ -30,22 +30,18 @@ if [ -z "$1" ]; then
 elif [ "$1" = "chrooted" ]; then
 # script to run in chroot environment
 
-	echo "deb $MIRROR squeeze main" >> /etc/apt/sources.list
-	echo "deb http://www.emdebian.org/debian squeeze main" >> /etc/apt/sources.list
+	echo "deb http://www.emdebian.org/debian $DISTRO main" >> /etc/apt/sources.list
 
 	mkdir -p ~/.aptitude
 	echo 'Apt::Install-Recommends "false";' > ~/.aptitude/config
 
 	aptitude update
-	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt emdebian-archive-keyring python-debian python-six
+	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt emdebian-archive-keyring  python-support
 	if [ "x$HOST_ARCH" = "xarmel" ]; then
-		CROSS_DEB="build-essential dpkg-cross g++-4.4-arm-linux-gnueabi binutils-arm-linux-gnueabi"
+		CROSS_DEB="build-essential dpkg-cross g++-4.3-arm-linux-gnueabi binutils-arm-linux-gnueabi"
 	fi
 	echo aptitude install -y $CROSS_DEB
 	aptitude install -y $CROSS_DEB
-	echo "deb http://www.emdebian.org/debian $DISTRO main" >> /etc/apt/sources.list
-	aptitude update
-	aptitude upgrade -y
 	aptitude clean
 
 	useradd -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER

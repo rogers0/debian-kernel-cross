@@ -1,0 +1,8 @@
+# Settings
+
+CHROOT=/debian-kernel_rootfs
+NORMALUSER=crossbuild
+NORMALUSER_UID=2000
+DISTRO=squeeze
+HOST_ARCH=armel
+MIRROR=http://cdn.debian.net/debian

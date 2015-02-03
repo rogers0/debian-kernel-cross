@@ -19,14 +19,5 @@ fi
 
 # real script to run in chroot environment
 
-cd /home/$NORMALUSER/${DISTRO}-kernel
-git clean -fd
-export DEB_BUILD_OPTIONS=parallel=7
-touch ../build_begin.txt
-fakeroot debian/rules clean 2>&1 | tee -a log_0_setup.txt
-fakeroot debian/rules orig 2>&1 | tee -a log_0_setup.txt
-fakeroot make -f debian/rules.gen setup_armel_none_kirkwood 2>&1 | tee -a log_0_setup.txt
-fakeroot make -f debian/rules.gen binary-arch_armel_none_kirkwood 2>&1 | tee -a log_1_binary.txt
-touch ../build_end_binary.txt
-fakeroot make -j4 -f debian/rules.gen binary-indep 2>&1 | tee -a log_2_indep.txt
-touch ../build_end_indep.txt
+git clone https://github.com/rogers0/linux-2.6_squeeze-security /home/$NORMALUSER/${DISTRO}-kernel
+wget -c $MIRROR/pool/main/l/linux-2.6/linux-2.6_2.6.32.orig.tar.gz
