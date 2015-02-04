@@ -36,7 +36,7 @@ elif [ "$1" = "chrooted" ]; then
 	echo 'Apt::Install-Recommends "false";' > ~/.aptitude/config
 
 	aptitude update
-	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt emdebian-archive-keyring  python-support
+	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt emdebian-archive-keyring python-support
 	if [ "x$HOST_ARCH" = "xarmel" ]; then
 		CROSS_DEB="build-essential dpkg-cross g++-4.3-arm-linux-gnueabi binutils-arm-linux-gnueabi"
 	fi

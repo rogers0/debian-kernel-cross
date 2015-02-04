@@ -28,3 +28,5 @@ git svn fetch -r21785:HEAD
 git checkout -b linux_3.16.7-ckt2-1bpo70 svn/tags/3.16.7-ckt2-1%7Ebpo70+1
 (cd ..; wget -c $MIRROR/pool/main/l/linux/linux_3.16.7-ckt2.orig.tar.xz)
 sed -i "/compiler/s/gcc-4.6/gcc-4.4/" debian/config/defines
+# if you meet "check size" issue, please try the cmd below
+#sed -i "s/check-size: 2097080/#&/" debian/config/armel/defines

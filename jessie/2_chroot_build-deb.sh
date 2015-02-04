@@ -21,12 +21,12 @@ fi
 
 cd /home/$NORMALUSER/${DISTRO}-kernel
 git clean -fd
-export DEB_BUILD_OPTIONS=parallel=7
+export DEB_BUILD_OPTIONS="parallel=$PARALLEL"
 touch ../build_begin.txt
 fakeroot debian/rules clean 2>&1 | tee -a log_0_setup.txt
 fakeroot debian/rules orig 2>&1 | tee -a log_0_setup.txt
 fakeroot make -f debian/rules.gen setup_armel_none_kirkwood 2>&1 | tee -a log_0_setup.txt
-fakeroot make -f debian/rules.gen binary-arch_armel_none_kirkwood 2>&1 | tee -a log_1_binary.txt
+fakeroot make -j$PARALLEL -f debian/rules.gen binary-arch_armel_none_kirkwood 2>&1 | tee -a log_1_binary.txt
 touch ../build_end_binary.txt
-fakeroot make -j4 -f debian/rules.gen binary-indep 2>&1 | tee -a log_2_indep.txt
+fakeroot make -j$PARALLEL -f debian/rules.gen binary-indep 2>&1 | tee -a log_2_indep.txt
 touch ../build_end_indep.txt

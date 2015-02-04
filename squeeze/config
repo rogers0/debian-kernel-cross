@@ -5,4 +5,5 @@ NORMALUSER=crossbuild
 NORMALUSER_UID=2000
 DISTRO=squeeze
 HOST_ARCH=armel
+PARALLEL=5
 MIRROR=http://cdn.debian.net/debian

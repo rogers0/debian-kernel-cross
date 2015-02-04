@@ -29,3 +29,5 @@ git checkout -b linux_3.16.7-ckt2-1 svn/tags/3.16.7-ckt2-1
 (cd ..; wget -c $MIRROR/pool/main/l/linux/linux_3.16.7-ckt2.orig.tar.xz)
 sed -i "/compiler/s/gcc-4.8/gcc-4.9/" debian/config/defines
 sed -i "/gcc-4.8: gcc-4.8/agcc-4.9: gcc-4.9" debian/config/defines
+# if you meet "check size" issue, please try the cmd below
+#sed -i "s/check-size: 2097080/#&/" debian/config/armel/defines
