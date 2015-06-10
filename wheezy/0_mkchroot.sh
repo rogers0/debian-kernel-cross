@@ -3,8 +3,6 @@
 SCRIPT_ROOT=$(readlink -f $(dirname $0))
 SRC_ROOT=$(readlink -f $(dirname $0)/..)
 ID=$(id -u)
-DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
-DEBOOTSTRAP_PATH=/pool/main/c/cdebootstrap
 
 . $SCRIPT_ROOT/config
 
@@ -32,6 +30,9 @@ elif [ "$1" = "chrooted" ]; then
 
 	echo "deb $MIRROR squeeze main" >> /etc/apt/sources.list
 	echo "deb http://www.emdebian.org/debian squeeze main" >> /etc/apt/sources.list
+	echo "deb ${MIRROR} ${DISTRO}-backports main contrib non-free" >> /etc/apt/sources.list
+	echo "deb ${MIRROR} ${DISTRO}-backports-sloppy main contrib non-free" >> /etc/apt/sources.list
+	echo "deb http://security.debian.org ${DISTRO}/updates main contrib non-free" >> /etc/apt/sources.list
 
 	mkdir -p ~/.aptitude
 	echo 'Apt::Install-Recommends "false";' > ~/.aptitude/config
@@ -48,6 +49,6 @@ elif [ "$1" = "chrooted" ]; then
 	aptitude upgrade -y
 	aptitude clean
 
-	useradd -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER
+	useradd -b / -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER
 
 fi

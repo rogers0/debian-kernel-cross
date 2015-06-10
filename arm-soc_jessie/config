@@ -5,16 +5,13 @@ CHROOT=/data/${DISTRO}-kernel_rootfs
 NORMALUSER=crossbuild
 NORMALUSER_UID=2000
 HOST_ARCH=armel
-PARALLEL=5
+PARALLEL=20
 MIRROR=http://cdn.debian.net/debian
+MIRROR=http://debian-mirror.sakura.ne.jp/debian
 DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
 DEBOOTSTRAP_PATH=/pool/main/c/cdebootstrap
-KERNEL_PATH=/$NORMALUSER/${DISTRO}-kernel
+KERNEL_PATH=/$NORMALUSER/arm-soc-kernel
 
-KERNEL_SRC=linux_3.16.7-ckt11.orig.tar.xz
-GIT_TAG=svn/tags/3.16.7-ckt11-1
-GIT_BRANCH=linux_3.16.7-ckt11-1
-
-#KERNEL_SRC=linux_4.0.4.orig.tar.xz
-#GIT_TAG=svn/tags/4.0.4-1
-#GIT_BRANCH=linux_4.0.4-1
+GIT_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
+GIT_TAG=origin/for-next
+GIT_BRANCH=for-next

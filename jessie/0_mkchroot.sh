@@ -3,8 +3,6 @@
 SCRIPT_ROOT=$(readlink -f $(dirname $0))
 SRC_ROOT=$(readlink -f $(dirname $0)/..)
 ID=$(id -u)
-DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
-DEBOOTSTRAP_PATH=/pool/main/c/cdebootstrap
 
 . $SCRIPT_ROOT/config
 
@@ -31,13 +29,16 @@ elif [ "$1" = "chrooted" ]; then
 # script to run in chroot environment
 
 	echo "deb http://www.emdebian.org/tools/debian $DISTRO main" >> /etc/apt/sources.list
+	echo "deb ${MIRROR} ${DISTRO}-backports main contrib non-free" >> /etc/apt/sources.list
+	echo "deb ${MIRROR} ${DISTRO}-backports-sloppy main contrib non-free" >> /etc/apt/sources.list
+	echo "deb http://security.debian.org ${DISTRO}/updates main contrib non-free" >> /etc/apt/sources.list
 	wget -nv -O - http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add -
 	mkdir -p ~/.aptitude
 	echo 'Apt::Install-Recommends "false";' > ~/.aptitude/config
 	[ -n "$HOST_ARCH" ] && dpkg --add-architecture $HOST_ARCH
 
 	aptitude update
-	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt python3-debian
+	aptitude install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot git-svn libfile-fcntllock-perl quilt python-debian python-six patchutils
 	if [ "x$HOST_ARCH" = "xarmel" ]; then
 		CROSS_DEB="build-essential dpkg-cross crossbuild-essential-armel binutils-arm-linux-gnueabi"
 	elif [ "x$HOST_ARCH" = "xarmhf" ]; then
@@ -49,6 +50,6 @@ elif [ "$1" = "chrooted" ]; then
 	aptitude install -y $CROSS_DEB
 	aptitude clean
 
-	useradd -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER
+	useradd -b / -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER
 
 fi

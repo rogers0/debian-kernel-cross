@@ -19,9 +19,18 @@ fi
 
 # real script to run in chroot environment
 
-[ ! -d $KERNEL_PATH ] && git clone -n $GIT_REPO $KERNEL_PATH
 cd $KERNEL_PATH
 git clean -fd
-git reset --hard
-git checkout -b $GIT_BRANCH $GIT_TAG || (git checkout --orphan ORPHAN; git branch -D $GIT_BRANCH; git checkout -fb $GIT_BRANCH $GIT_TAG)
-(cd ..; [ -n "$KERNEL_SRC" ] && wget -nv -c $MIRROR/pool/main/l/linux-2.6/${KERNEL_SRC})
+touch ../build_begin.txt
+
+export XZ_DEFAULTS=-7   # limit memory usage
+LOCAL_INST=../local_install
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- mrproper
+cp -a ../config .config
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- oldconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- -j$PARALLEL zImage modules 2>&1 | tee log.0_zImage_modules
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- modules_install INSTALL_MOD_PATH=$LOCAL_INST
+mkdir -p $LOCAL_INST/boot
+cp -a arch/arm/boot/zImage $LOCAL_INST/boot/vmlinuz-`cat include/config/kernel.release`
+
+touch ../build_end_binary.txt

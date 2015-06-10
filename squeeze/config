@@ -1,9 +1,17 @@
 # Settings
 
-CHROOT=/debian-kernel_rootfs
+DISTRO=squeeze
+CHROOT=/data/${DISTRO}-kernel_rootfs
 NORMALUSER=crossbuild
 NORMALUSER_UID=2000
-DISTRO=squeeze
 HOST_ARCH=armel
 PARALLEL=5
 MIRROR=http://cdn.debian.net/debian
+DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
+DEBOOTSTRAP_PATH=/pool/main/c/cdebootstrap
+KERNEL_PATH=/$NORMALUSER/${DISTRO}-kernel
+
+KERNEL_SRC=linux-2.6_2.6.32.orig.tar.gz
+GIT_REPO=https://github.com/rogers0/linux-2.6_squeeze-security
+GIT_TAG=origin/master
+GIT_BRANCH=master
