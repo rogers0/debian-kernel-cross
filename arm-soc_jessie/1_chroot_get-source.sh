@@ -19,16 +19,24 @@ fi
 
 # real script to run in chroot environment
 
-if [ ! -d $KERNEL_PATH ]; then
-	mkdir $KERNEL_PATH
-	cd $_
-	git init
-	git svn --prefix=svn/ init -T dists/sid/linux -t releases/linux svn://svn.debian.org/kernel
-	# r21785 is release of 3.16.2-1. Refer: http://anonscm.debian.org/viewvc/kernel/releases/linux/
-	git svn fetch -r21785:HEAD
+if [ -d "$KERNEL_PATH" ]; then
+	cd $KERNEL_PATH
+	git clean -fd
+	git reset --hard
 else
+	echo git clone -n $GIT_REPO $KERNEL_PATH
+	git clone -n $GIT_REPO $KERNEL_PATH
 	cd $KERNEL_PATH
 fi
-git clean -fd
-git reset --hard
 git checkout -b $GIT_BRANCH $GIT_TAG || (git checkout --orphan ORPHAN; git branch -D $GIT_BRANCH; git checkout -fb $GIT_BRANCH $GIT_TAG)
+
+echo
+echo Example for how to continue in chroot environment:
+echo -e \\t./chroot_shell.sh
+echo -e \\tpatch -p1 \< patch_...txt
+echo -e \\tsed -i \'/^EXTRAVERSION/s/$/.0-kirkwood/\' Makefile
+echo -e \\tgit add -u \# add all updated files to index
+echo -e \\tgit \#add -A \# add all new files to index to prevent being ereased by \"git clean -fd\" in script 2
+echo -e \\tgit diff --cached
+echo -e \\tlogout
+echo -e \\t./2_chroot_build.sh

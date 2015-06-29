@@ -48,6 +48,7 @@ elif [ "$1" = "chrooted" ]; then
 	fi
 	echo aptitude install -y $CROSS_DEB
 	aptitude install -y $CROSS_DEB
+	aptitude install -yr git-email ca-certificates
 	aptitude clean
 
 	useradd -b / -ms /bin/bash -u $NORMALUSER_UID $NORMALUSER
