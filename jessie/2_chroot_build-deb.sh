@@ -3,6 +3,7 @@
 SCRIPT_ROOT=$(readlink -f $(dirname $0))
 SRC_ROOT=$(readlink -f $(dirname $0)/..)
 ID=$(id -u)
+KERNEL_VARIANT="${HOST_ARCH}_${FEATURESET}_${FLAVOUR}"
 
 . $SCRIPT_ROOT/config
 
@@ -26,8 +27,8 @@ fakeroot debian/rules clean 2>&1 | tee -a log_0_setup.txt
 mv .git ../.git.repo.
 fakeroot debian/rules orig 2>&1 | tee -a log_0_setup.txt
 mv ../.git.repo. .git
-fakeroot make -f debian/rules.gen setup_armel_none_kirkwood 2>&1 | tee -a log_0_setup.txt
-fakeroot make -j$PARALLEL -f debian/rules.gen binary-arch_armel_none_kirkwood 2>&1 | tee -a log_1_binary.txt
+fakeroot make -f debian/rules.gen setup_${KERNEL_VARIANT} 2>&1 | tee -a log_0_setup.txt
+fakeroot make -j$PARALLEL -f debian/rules.gen binary-arch_${KERNEL_VARIANT} 2>&1 | tee -a log_1_binary.txt
 touch ../build_end_binary.txt
 fakeroot make -j$PARALLEL -f debian/rules.gen binary-indep 2>&1 | tee -a log_2_indep.txt
 touch ../build_end_indep.txt

@@ -19,18 +19,19 @@ fi
 
 # real script to run in chroot environment
 
-if [ ! -d $KERNEL_PATH ]; then
+if [ ! -d "$KERNEL_PATH" ]; then
 	mkdir $KERNEL_PATH
 	cd $_
 	git init
-	git svn --prefix=svn/ init -T dists/sid/linux -t releases/linux svn://svn.debian.org/kernel
+	echo git svn init --prefix=svn/ -T dists/trunk/linux -b dists/sid/linux -b dists/jessie-security/linux -b dists/jessie/linux -t releases/linux svn://svn.debian.org/kernel
+	git svn init --prefix=svn/ -T dists/trunk/linux -b dists/sid/linux -b dists/jessie-security/linux -b dists/jessie/linux -t releases/linux svn://svn.debian.org/kernel
 	# r21785 is release of 3.16.2-1. Refer: http://anonscm.debian.org/viewvc/kernel/releases/linux/
 	git svn fetch -r21785:HEAD
 else
 	cd $KERNEL_PATH
+	git clean -fd
+	git reset --hard
 fi
-git clean -fd
-git reset --hard
 git checkout -b $GIT_BRANCH $GIT_TAG || (git checkout --orphan ORPHAN; git branch -D $GIT_BRANCH; git checkout -fb $GIT_BRANCH $GIT_TAG)
 (cd ..; [ -n "$KERNEL_SRC" ] && wget -nv -c $MIRROR/pool/main/l/linux/${KERNEL_SRC})
 
