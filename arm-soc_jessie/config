@@ -12,7 +12,22 @@ KERNEL_PATH=/$NORMALUSER/arm-soc-kernel
 HOST_ARCH=armel
 MAKE_ARCH=arm
 CROSS_PREFIX=arm-linux-gnueabi-
-DEFCONFIG=defconfig
+#FLAVOUR=orion5x
+#FLAVOUR=kirkwood
+FLAVOUR=armmp
+
+DEFCONFIG=${FLAVOUR}_defconfig
+DEFCONFIG_PATCH=defconfig_patch.${FLAVOUR}
+case $FLAVOUR in
+"kirkwood")
+	DEFCONFIG=mvebu_v5_defconfig
+	;;
+"armmp")
+	HOST_ARCH=armhf
+	CROSS_PREFIX=arm-linux-gnueabihf-
+	DEFCONFIG=mvebu_v7_defconfig
+	;;
+esac
 
 GIT_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
 GIT_TAG=origin/for-next

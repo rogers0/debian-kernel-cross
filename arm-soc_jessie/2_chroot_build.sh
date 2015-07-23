@@ -30,9 +30,19 @@ touch ../build_begin.txt
 export XZ_DEFAULTS=-7   # limit memory usage
 LOCAL_INST=../local_install
 make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX mrproper
-#[ -e ../config ] && cp -a ../config .config
-make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX $DEFCONFIG
-#[ ! -e ../config ] && cp -a .config ../config
+
+if [ -n "$DEFCONFIG" ]; then
+	make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX $DEFCONFIG
+	if [ -n "$DEFCONFIG_PATCH" ]; then
+		cat $SCRIPT_ROOT/$DEFCONFIG_PATCH >> .config
+		make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX olddefconfig # or silentoldconfig?
+	fi
+else
+	#[ -e ../config ] && cp -a ../config .config
+	make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX oldconfig
+	#[ ! -e ../config ] && cp -a .config ../config
+fi
+
 make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX -j$PARALLEL zImage modules 2>&1 | tee log.0_zImage_modules
 make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX dtbs 2>&1 | tee log.1_zImage_modules
 make ARCH=$MAKE_ARCH CROSS_COMPILE=$CROSS_PREFIX modules_install INSTALL_MOD_PATH=$LOCAL_INST 2>&1 | tee log.2_modules_install
