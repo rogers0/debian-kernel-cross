@@ -3,18 +3,28 @@
 DISTRO=jessie
 CHROOT=/data/${DISTRO}-kernel_rootfs
 NORMALUSER=crossbuild
-NORMALUSER_UID=2000
+NORMALUSER_UID=2000	# the user ID inside chroot
+LOCAL_UID=1000		# the user ID where shared local git repo is saved
+LOCAL_HOME=$(eval echo ~$(id -nu $LOCAL_UID 2>/dev/null))
 PARALLEL=5
-MIRROR=http://cdn.debian.net/debian
-DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
+MIRROR=http://httpredir.debian.org/debian
 DEBOOTSTRAP_PATH=/pool/main/c/cdebootstrap
+DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
 KERNEL_PATH=/$NORMALUSER/arm-soc-kernel
-HOST_ARCH=armel
+GIT_REPO=https://kernel.googlesource.com/pub/scm/linux/kernel/git/arm/arm-soc
+LINUX_REPO=https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
+UBUNTU_REPO=git://kernel.ubuntu.com/ubuntu/linux.git
+LINUX_DIR=linux
+
 MAKE_ARCH=arm
+HOST_ARCH=armel
 CROSS_PREFIX=arm-linux-gnueabi-
 #FLAVOUR=orion5x
-#FLAVOUR=kirkwood
-FLAVOUR=armmp
+FLAVOUR=kirkwood
+#FLAVOUR=armmp
+
+GIT_TAG=origin/for-next
+GIT_BRANCH=for-next
 
 DEFCONFIG=${FLAVOUR}_defconfig
 DEFCONFIG_PATCH=defconfig_patch.${FLAVOUR}
@@ -28,7 +38,3 @@ case $FLAVOUR in
 	DEFCONFIG=mvebu_v7_defconfig
 	;;
 esac
-
-GIT_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
-GIT_TAG=origin/for-next
-GIT_BRANCH=for-next

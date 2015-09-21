@@ -5,6 +5,7 @@ SRC_ROOT=$(readlink -f $(dirname $0)/..)
 ID=$(id -u)
 
 . $SCRIPT_ROOT/config
+[ -e "$SCRIPT_ROOT/config_local" ] && . $SCRIPT_ROOT/config_local
 
 [ $ID -gt 0 ] && echo Please use root or sudo environment. && exit 1
 
@@ -24,10 +25,13 @@ if [ -z "$1" ]; then
 	cp -a $SRC_ROOT $CHROOT
 	echo chroot $CHROOT /$(basename $SRC_ROOT)/$(basename $SCRIPT_ROOT)/$(basename $0) chrooted
 	chroot $CHROOT /$(basename $SRC_ROOT)/$(basename $SCRIPT_ROOT)/$(basename $0) chrooted
+	GITCONF=`find /home -maxdepth 2 -name .gitconfig|head -n1`
+	[ -n "$GITCONF" -a -e "$GITCONF" ] && cp -a $GITCONF $CHROOT/$NORMALUSER && chown $NORMALUSER_UID.$NORMALUSER_UID $CHROOT/$NORMALUSER/.gitconfig
 
 elif [ "$1" = "chrooted" ]; then
 # script to run in chroot environment
 
+	echo "deb ${MIRROR}-lts squeeze main contrib non-free" >> /etc/apt/sources.list
 	echo "deb http://www.emdebian.org/debian squeeze main" >> /etc/apt/sources.list
 	echo "deb ${MIRROR}-backports squeeze-backports main contrib non-free" >> /etc/apt/sources.list
 	echo "deb ${MIRROR}-backports squeeze-backports-sloppy main contrib non-free" >> /etc/apt/sources.list

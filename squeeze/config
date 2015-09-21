@@ -3,17 +3,24 @@
 DISTRO=squeeze
 CHROOT=/data/${DISTRO}-kernel_rootfs
 NORMALUSER=crossbuild
-NORMALUSER_UID=2000
+NORMALUSER_UID=2000	# the user ID inside chroot
+LOCAL_UID=1000		# the user ID where shared local git repo is saved
+LOCAL_HOME=$(eval echo ~$(id -nu $LOCAL_UID 2>/dev/null))
 PARALLEL=5
-MIRROR=http://cdn.debian.net/debian
-DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
+MIRROR=http://httpredir.debian.org/debian
 DEBOOTSTRAP_PATH=/pool/main/c/cdebootstrap
+DEBOOTSTRAP_DEB=cdebootstrap-static_0.6.4_amd64.deb
 KERNEL_PATH=/$NORMALUSER/${DISTRO}-kernel
+DEB_KERNEL_REPO=git://anonscm.debian.org/kernel/linux.git
+LINUX_REPO=https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
+UBUNTU_REPO=git://kernel.ubuntu.com/ubuntu/linux.git
+DEB_KERNEL_DIR=debian-kernel
+LINUX_DIR=linux
+
 HOST_ARCH=armel
 FEATURESET=none
 FLAVOUR=kirkwood
 
-KERNEL_SRC=linux-2.6_2.6.32.orig.tar.gz
-GIT_REPO=https://github.com/rogers0/linux-2.6_squeeze-security
-GIT_TAG=origin/master
-GIT_BRANCH=master
+DEB_KERNEL_VER=2.6.32
+GIT_TAG=origin/squeeze-security
+GIT_BRANCH=squeeze
