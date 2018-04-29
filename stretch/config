@@ -1,0 +1,7 @@
+# Settings
+
+DISTRO=stretch
+
+# Reset $DISTRO related variables
+CHROOT=/data/${DISTRO}-kernel_rootfs
+DEB_KERNEL_BRANCH=${DISTRO}-backports
