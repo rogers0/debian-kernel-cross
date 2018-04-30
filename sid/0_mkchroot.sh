@@ -22,8 +22,8 @@ if [ -z "$1" ]; then
 	echo en_US.UTF-8 UTF-8 > $CHROOT/etc/locale.gen
 	echo LANG=en_US.UTF-8 > $CHROOT/etc/default/locale
 	[ -f /etc/timezone ] && cp -a /etc/timezone $CHROOT/etc
-	echo cdebootstrap-static --flavour=minimal --include=apt,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
-	cdebootstrap-static --flavour=minimal --include=apt,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
+	echo cdebootstrap-static --flavour=minimal --include=apt,apt-utils,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
+	cdebootstrap-static --flavour=minimal --include=apt,apt-utils,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
 	echo >> $CHROOT/$NORMALUSER/.bashrc
 	echo export http_proxy=$http_proxy >> $CHROOT/$NORMALUSER/.bashrc
 	echo export no_proxy=$no_proxy >> $CHROOT/$NORMALUSER/.bashrc
