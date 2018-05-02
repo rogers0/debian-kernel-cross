@@ -12,6 +12,7 @@ if [ $LOCAL_UID -eq 0 -a -d $CHROOT ]; then
 	BASENAME=$(basename $SRC_ROOT)
 	DEB_KERNEL_GIT=$(basename $DEB_KERNEL_DIR).git
 	LINUX_GIT=$(basename $LINUX_DIR).git
+	grep "$CHROOT/$NORMALUSER/.ccache" /proc/mounts > /dev/null && umount $CHROOT/$NORMALUSER/.ccache
 	grep "$CHROOT/$NORMALUSER/$BASENAME" /proc/mounts > /dev/null && umount $CHROOT/$NORMALUSER/$BASENAME
 	grep "$CHROOT/$DEB_KERNEL_GIT" /proc/mounts > /dev/null && umount $CHROOT/$DEB_KERNEL_GIT
 	grep "$CHROOT/$LINUX_GIT" /proc/mounts > /dev/null && umount $CHROOT/$LINUX_GIT

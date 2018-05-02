@@ -18,4 +18,5 @@ LINUX_STABLE_REPO=https://kernel.googlesource.com/pub/scm/linux/kernel/git/stabl
 UBUNTU_REPO= #git://kernel.ubuntu.com/ubuntu/linux.git # it's for jessie only
 DEB_KERNEL_DIR=~/debian-kernel
 LINUX_DIR=~/linux
+CCACHE_DIR=~/.ccache_chroot	# ccache folder to be mounted into chroot. chown to $NORMALUSER_UID
 HOST_ARCH=armel

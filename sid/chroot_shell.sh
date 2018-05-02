@@ -31,6 +31,12 @@ if [ $LOCAL_UID -eq 0 -a -d $CHROOT ]; then
 			mount --bind ${LINUX_DIR}/.git $CHROOT/$LINUX_GIT
 	fi
 
+	[ ! -d $CCACHE_DIR ] && mkdir -p $CCACHE_DIR && chown $NORMALUSER_UID.$NORMALUSER_UID $CCACHE_DIR
+	[ ! -d $CHROOT/$NORMALUSER/.ccache ] && mkdir -p $CHROOT/$NORMALUSER/.ccache && \
+		chown $NORMALUSER_UID.$NORMALUSER_UID $CHROOT/$NORMALUSER/.ccache
+	grep $CHROOT/$NORMALUSER/.ccache /proc/mounts > /dev/null || \
+		mount --bind $CCACHE_DIR $CHROOT/$NORMALUSER/.ccache
+
 	[ "x$ARG" = "xprepare" ] && exit 0
 	echo Start to work under chroot shell
 	echo chroot $CHROOT su -l $NORMALUSER
