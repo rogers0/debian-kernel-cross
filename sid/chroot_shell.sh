@@ -37,6 +37,14 @@ if [ $LOCAL_UID -eq 0 -a -d $CHROOT ]; then
 	grep $CHROOT/$NORMALUSER/.ccache /proc/mounts > /dev/null || \
 		mount --bind $CCACHE_DIR $CHROOT/$NORMALUSER/.ccache
 
+	if [ -e "$CHROOT$CHROOT_COUNT" ]; then
+		count=$(cat $CHROOT$CHROOT_COUNT)
+		sed -i s/$count/$(($count+1))/ $CHROOT$CHROOT_COUNT
+	else
+		echo 1 > $CHROOT$CHROOT_COUNT
+	fi
+	echo chroot count=$(cat $CHROOT$CHROOT_COUNT)
+
 	[ "x$ARG" = "xprepare" ] && exit 0
 	echo Start to work under chroot shell
 	echo chroot $CHROOT su -l $NORMALUSER

@@ -2,6 +2,7 @@
 
 DISTRO=sid
 CHROOT=/data/${DISTRO}-kernel_rootfs
+CHROOT_COUNT=/.chroot_count
 NORMALUSER=crossbuild
 NORMALUSER_UID=2000	# the user ID inside chroot
 LOCAL_UID=$(id -u)  # the user ID where shared local git repo is saved
