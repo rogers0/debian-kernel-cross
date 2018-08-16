@@ -45,10 +45,20 @@ if [ $LOCAL_UID -eq 0 -a -d $CHROOT ]; then
 	fi
 	echo chroot count=$(cat $CHROOT$CHROOT_COUNT)
 
-	[ "x$ARG" = "xprepare" ] && exit 0
-	echo Start to work under chroot shell
-	echo chroot $CHROOT su -l $NORMALUSER
-	chroot $CHROOT su -l $NORMALUSER
+	case "$ARG" in
+	prepare)
+		exit 0
+		;;
+	root)
+		echo Start to work under chroot shell with root privilege!
+		echo chroot $CHROOT
+		chroot $CHROOT
+		;;
+	*)
+		echo Start to work under chroot shell
+		echo chroot $CHROOT su -l $NORMALUSER
+		chroot $CHROOT su -l $NORMALUSER
+	esac
 	#echo you need to run \"./umount_chroot_device.sh\" to release some chrooted device mounting after finishing all chroot shells.
 	$SCRIPT_ROOT/umount_chroot_device.sh
 fi
