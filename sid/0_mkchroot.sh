@@ -6,7 +6,7 @@ SRC_ROOT=$(readlink -f $(dirname $0)/..)
 . $SCRIPT_ROOT/config_common
 [ -e "$SCRIPT_ROOT/config" ] && . $SCRIPT_ROOT/config
 [ -e "$SCRIPT_ROOT/config_local" ] && . $SCRIPT_ROOT/config_local
-LOCAL_HOME=$(eval echo ~$(id -nu $LOCAL_UID 2>/dev/null))
+LOCAL_HOME=$(eval echo ~$(logname))
 
 [ $LOCAL_UID -gt 0 ] && echo Please use root or sudo environment. && exit 1
 
@@ -22,8 +22,8 @@ if [ -z "$1" ]; then
 	echo en_US.UTF-8 UTF-8 > $CHROOT/etc/locale.gen
 	echo LANG=en_US.UTF-8 > $CHROOT/etc/default/locale
 	[ -f /etc/timezone ] && cp -a /etc/timezone $CHROOT/etc
-	echo cdebootstrap-static --flavour=minimal --include=apt,apt-utils,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
-	cdebootstrap-static --flavour=minimal --include=apt,apt-utils,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
+	echo cdebootstrap-static --flavour=minimal --include=apt,apt-utils,apt-transport-https,ca-certificates,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
+	cdebootstrap-static --flavour=minimal --include=apt,apt-utils,apt-transport-https,ca-certificates,vim,whiptail,wget,ssh,rsync,screen,less,locales,tzdata $DISTRO $CHROOT $MIRROR
 	echo >> $CHROOT/$NORMALUSER/.bashrc
 	[ -n "$http_proxy" ] &&
 		echo export http_proxy=$http_proxy >> $CHROOT/$NORMALUSER/.bashrc
@@ -34,7 +34,7 @@ if [ -z "$1" ]; then
 	echo chroot $CHROOT /$(basename $SRC_ROOT)/$(basename $SCRIPT_ROOT)/$(basename $0) chrooted
 	chroot $CHROOT /$(basename $SRC_ROOT)/$(basename $SCRIPT_ROOT)/$(basename $0) chrooted
 	mv $CHROOT/$(basename $SRC_ROOT) $CHROOT/$NORMALUSER
-	GITCONF=$(find ~ -maxdepth 2 -name .gitconfig|head -n1)
+	GITCONF=$(find $LOCAL_HOME -maxdepth 2 -name .gitconfig|head -n1)
 	[ -n "$GITCONF" -a -e "$GITCONF" ] && cp $GITCONF $CHROOT/$NORMALUSER
 	chown -R $NORMALUSER_UID.$NORMALUSER_UID $CHROOT/$NORMALUSER
 
@@ -46,7 +46,9 @@ elif [ "$1" = "chrooted" ]; then
 		echo "deb ${MIRROR} ${DISTRO}-backports main contrib non-free" >> /etc/apt/sources.list
 		echo "deb ${MIRROR} ${DISTRO}-backports-sloppy main contrib non-free" >> /etc/apt/sources.list
 	fi
-	echo "deb http://security.debian.org ${DISTRO}/updates main contrib non-free" >> /etc/apt/sources.list
+	if [ "${DISTRO}" != "sid" -a "${DISTRO}" != "unstable" ]; then
+		echo "deb http://security.debian.org ${DISTRO}/updates main contrib non-free" >> /etc/apt/sources.list
+	fi
 	echo APT::Install-Recommends \"false\"\; >> /etc/apt/apt.conf
 	[ -n "$http_proxy" ] &&
 		echo Acquire::http::Proxy \"$http_proxy\"\; >> /etc/apt/apt.conf
@@ -55,7 +57,7 @@ elif [ "$1" = "chrooted" ]; then
 	[ -n "$HOST_ARCH" ] && dpkg --add-architecture $HOST_ARCH
 
 	apt-get update
-	apt-get install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot libfile-fcntllock-perl quilt python-debian python-six patchutils flex bison libssl-dev ccache mount dh-exec kmod bash-completion
+	apt-get install -y debhelper devscripts xmlto kernel-wedge fakeroot gcc bc cpio debian-keyring fakeroot libfile-fcntllock-perl quilt python-debian python-six patchutils flex bison libssl-dev ccache mount dh-exec kmod bash-completion git-email
 	if [ "x$HOST_ARCH" = "xarmel" ]; then
 		CROSS_DEB="build-essential dpkg-cross crossbuild-essential-armel binutils-arm-linux-gnueabi"
 	elif [ "x$HOST_ARCH" = "xarmhf" ]; then
@@ -65,7 +67,6 @@ elif [ "$1" = "chrooted" ]; then
 	fi
 	echo apt-get install -y $CROSS_DEB
 	apt-get install -y $CROSS_DEB
-	apt-get install -y git-email ca-certificates
 	apt-get upgrade -y
 	apt-get clean
 
