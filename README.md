@@ -57,4 +57,4 @@ The cross compiled armel kernel is confirmed to working on:
 Credit
 ----
 
-- https://kernel-handbook.debian.net
+- https://kernel-team.pages.debian.net/kernel-handbook/
